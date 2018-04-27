@@ -1,0 +1,40 @@
+Configuration:
+  status: warn
+  name: Log4jYAMLConfig
+  properties:
+    property:
+      name: filename
+      value: /logs/order.log
+  thresholdFilter:
+    level: debug
+  Appenders:
+    Console:
+      name: STDOUT
+      PatternLayout:
+        Pattern: "%d{yyyy-MM-dd HH:mm:ss} [%-5p][%t][order - %X{X-B3-TraceId} - %X{X-B3-SpanId} - %X{X-B3-ParentSpanId}][%l] - %m%n"
+    File:
+      name: File
+      fileName: ${filename}
+      PatternLayout:
+        Pattern: "%d %p [order - %X{X-B3-TraceId} - %X{X-B3-SpanId} - %X{X-B3-ParentSpanId}][%t][%l] %m%n"
+    Kafka:
+      name: KAFKA
+      topic: test_log
+      PatternLayout:
+        pattern: "%d [%p]${hostName}[merchant - %X{X-B3-TraceId} - %X{X-B3-SpanId} - %X{X-B3-ParentSpanId}] [%t] - [%l] %m%n"
+      Property:
+        - name: bootstrap.servers
+          value: 192.168.0.13:9092
+  Loggers:
+    logger:
+      -
+        name: com.gl365
+        level: debug
+        AppenderRef:
+          ref: STDOUT
+    Root:
+      level: INFO
+      AppenderRef:
+        - ref: STDOUT
+#        - ref: File
+#        - ref: KAFKA

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gl365.order.mapper.CommentLabelsMapper" >
+  <resultMap id="BaseResultMap" type="com.gl365.order.model.comment.CommentLabels" >
+    <result column="comment_id" property="commentId" jdbcType="VARCHAR" />
+    <result column="comment_label_id" property="commentLabelId" jdbcType="INTEGER" />
+    <result column="comment_label_name" property="commentLabelName" jdbcType="VARCHAR" />
+  </resultMap>
+   <sql id="Base_Column_List" >
+    comment_id, comment_label_id
+  </sql>
+   <select id="selectByCommentId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+	SELECT
+		a.comment_id, a.comment_label_id,b.`name` as comment_label_name
+	FROM
+			comment_labels a
+	JOIN 	comment_labels_base b on b.id = a.comment_label_id
+	where 	comment_id = #{commentId,jdbcType=VARCHAR}
+  </select>
+  
+  <insert id="insertSelective" parameterType="com.gl365.order.model.comment.CommentLabels" >
+    insert into comment_labels
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="commentId != null" >
+        comment_id,
+      </if>
+      <if test="commentLabelId != null" >
+        comment_label_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="commentId != null" >
+        #{commentId,jdbcType=VARCHAR},
+      </if>
+      <if test="commentLabelId != null" >
+        #{commentLabelId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+</mapper>

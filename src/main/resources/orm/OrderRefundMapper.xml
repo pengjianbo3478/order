@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gl365.order.mapper.OrderRefundMapper">
+  <resultMap id="BaseResultMap" type="com.gl365.order.model.OrderRefund">
+    <id column="order_id" jdbcType="VARCHAR" property="orderId" />
+    <result column="order_sn" jdbcType="VARCHAR" property="orderSn" />
+    <result column="order_title" jdbcType="VARCHAR" property="orderTitle" />
+    <result column="order_type" jdbcType="INTEGER" property="orderType" />
+    <result column="order_status" jdbcType="INTEGER" property="orderStatus" />
+    <result column="total_amount" jdbcType="DECIMAL" property="totalAmount" />
+    <result column="bean_amount" jdbcType="DECIMAL" property="beanAmount" />
+    <result column="cash_amount" jdbcType="DECIMAL" property="cashAmount" />
+    <result column="gift_amount" jdbcType="DECIMAL" property="giftAmount" />
+    <result column="member_id" jdbcType="VARCHAR" property="memberId" />
+    <result column="merchant_no" jdbcType="VARCHAR" property="merchantNo" />
+    <result column="operator_id" jdbcType="VARCHAR" property="operatorId" />
+    <result column="orig_order_sn" jdbcType="VARCHAR" property="origOrderSn" />
+    <result column="payment_time" jdbcType="TIMESTAMP" property="paymentTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="push_time" jdbcType="TIMESTAMP" property="pushTime" />
+    <result column="fft_sequence" jdbcType="VARCHAR" property="fftSequence" />
+    <result column="fft_order_sn" jdbcType="VARCHAR" property="fftOrderSn" />
+    <result column="bar_code" jdbcType="VARCHAR" property="barCode" />
+    <result column="terminal" jdbcType="VARCHAR" property="terminal" />
+    <result column="query_time" property="queryTime" jdbcType="TIMESTAMP"/>
+    <result column="query_sum" property="querySum"  jdbcType="INTEGER"/>  
+    <result column="bean_type" property="beanType"  jdbcType="INTEGER"/>  
+    <result column="channel" property="channel"  jdbcType="VARCHAR"/>  
+  </resultMap>
+  <sql id="Base_Column_List">
+    order_id, order_sn, order_title, order_type, order_status, total_amount, bean_amount, 
+    cash_amount, gift_amount, member_id, merchant_no, operator_id, orig_order_sn, payment_time, 
+    create_time, modify_time, push_time, fft_sequence, fft_order_sn, bar_code, terminal,query_time,query_sum,bean_type,channel
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from order_refund
+    where order_id = #{orderId,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectBySn" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from order_refund
+    where order_sn = #{orderSn,jdbcType=VARCHAR}
+  </select>
+ <insert id="insertSelective" parameterType="com.gl365.order.model.OrderRefund">
+    insert into order_refund
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="orderId != null">
+        order_id,
+      </if>
+      <if test="orderSn != null">
+        order_sn,
+      </if>
+      <if test="orderTitle != null">
+        order_title,
+      </if>
+      <if test="orderType != null">
+        order_type,
+      </if>
+      <if test="orderStatus != null">
+        order_status,
+      </if>
+      <if test="totalAmount != null">
+        total_amount,
+      </if>
+      <if test="beanAmount != null">
+        bean_amount,
+      </if>
+      <if test="cashAmount != null">
+        cash_amount,
+      </if>
+      <if test="giftAmount != null">
+        gift_amount,
+      </if>
+      <if test="memberId != null">
+        member_id,
+      </if>
+      <if test="merchantNo != null">
+        merchant_no,
+      </if>
+      <if test="operatorId != null">
+        operator_id,
+      </if>
+      <if test="origOrderSn != null">
+        orig_order_sn,
+      </if>
+      <if test="paymentTime != null">
+        payment_time,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+      <if test="pushTime != null">
+        push_time,
+      </if>
+      <if test="fftSequence != null">
+        fft_sequence,
+      </if>
+      <if test="fftOrderSn != null">
+        fft_order_sn,
+      </if>
+      <if test="barCode != null">
+        bar_code,
+      </if>
+      <if test="terminal != null">
+        terminal,
+      </if>
+      <if test="querySum != null">
+        query_sum,
+      </if>
+       <if test="queryTime != null">
+        query_time,
+      </if>
+      <if test="beanType != null">
+        bean_type,
+      </if>
+      <if test="channel != null">
+        channel,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="orderId != null">
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="orderSn != null">
+        #{orderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="orderTitle != null">
+        #{orderTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="orderType != null">
+        #{orderType,jdbcType=INTEGER},
+      </if>
+      <if test="orderStatus != null">
+        #{orderStatus,jdbcType=INTEGER},
+      </if>
+      <if test="totalAmount != null">
+        #{totalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="beanAmount != null">
+        #{beanAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="cashAmount != null">
+        #{cashAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="giftAmount != null">
+        #{giftAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="memberId != null">
+        #{memberId,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantNo != null">
+        #{merchantNo,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorId != null">
+        #{operatorId,jdbcType=VARCHAR},
+      </if>
+      <if test="origOrderSn != null">
+        #{origOrderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentTime != null">
+        #{paymentTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pushTime != null">
+        #{pushTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fftSequence != null">
+        #{fftSequence,jdbcType=VARCHAR},
+      </if>
+      <if test="fftOrderSn != null">
+        #{fftOrderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="barCode != null">
+        #{barCode,jdbcType=VARCHAR},
+      </if>
+      <if test="terminal != null">
+        #{terminal,jdbcType=VARCHAR},
+      </if>
+      <if test="querySum != null">
+        #{querySum,jdbcType=INTEGER},
+      </if>
+      <if test="queryTime != null">
+        #{queryTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="beanType != null">
+        #{beanType,jdbcType=VARCHAR},
+      </if>
+      <if test="channel != null">
+        #{channel,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.gl365.order.model.OrderRefund">
+    update order_refund
+    <set>
+      <if test="orderSn != null">
+        order_sn = #{orderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="orderTitle != null">
+        order_title = #{orderTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="orderType != null">
+        order_type = #{orderType,jdbcType=INTEGER},
+      </if>
+      <if test="orderStatus != null">
+        order_status = #{orderStatus,jdbcType=INTEGER},
+      </if>
+      <if test="totalAmount != null">
+        total_amount = #{totalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="beanAmount != null">
+        bean_amount = #{beanAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="cashAmount != null">
+        cash_amount = #{cashAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="giftAmount != null">
+        gift_amount = #{giftAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="memberId != null">
+        member_id = #{memberId,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantNo != null">
+        merchant_no = #{merchantNo,jdbcType=VARCHAR},
+      </if>
+      <if test="operatorId != null">
+        operator_id = #{operatorId,jdbcType=VARCHAR},
+      </if>
+      <if test="origOrderSn != null">
+        orig_order_sn = #{origOrderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentTime != null">
+        payment_time = #{paymentTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pushTime != null">
+        push_time = #{pushTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fftSequence != null">
+        fft_sequence = #{fftSequence,jdbcType=VARCHAR},
+      </if>
+      <if test="fftOrderSn != null">
+        fft_order_sn = #{fftOrderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="barCode != null">
+        bar_code = #{barCode,jdbcType=VARCHAR},
+      </if>
+      <if test="terminal != null">
+        terminal = #{terminal,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where order_id = #{orderId,jdbcType=VARCHAR}
+  </update>
+  
+  
+    <update id="updateBySnSelective" parameterType="com.gl365.order.model.OrderRefund">
+    update order_refund
+    <set>
+      <if test="orderTitle != null">
+        order_title = #{orderTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="orderStatus != null">
+        order_status = #{orderStatus,jdbcType=INTEGER},
+      </if>
+      <if test="totalAmount != null">
+        total_amount = #{totalAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="beanAmount != null">
+        bean_amount = #{beanAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="cashAmount != null">
+        cash_amount = #{cashAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="giftAmount != null">
+        gift_amount = #{giftAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="origOrderSn != null">
+        orig_order_sn = #{origOrderSn,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="beanType != null" >
+        bean_type = #{beanType,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where  order_sn = #{orderSn,jdbcType=VARCHAR}
+  </update>
+  
+    <select id="selectByOrigOrderSn" parameterType="com.gl365.order.model.OrderRefund" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from order_refund
+    
+    where 1=1 
+    
+    <if test="orderSn != null">
+    	and order_sn = #{orderSn,jdbcType=VARCHAR} 
+    </if>
+    <if test="origOrderSn != null">
+    	and orig_order_sn = #{origOrderSn,jdbcType=VARCHAR} 
+    </if>
+    
+    and order_status = #{orderStatus,jdbcType=INTEGER} LIMIT 1
+  </select>
+     <update id="updateQuerySumByOrderSn" parameterType="com.gl365.order.model.OrderRefund">
+    update order_refund set 
+      query_sum = query_sum+1,
+      query_time =  #{queryTime,jdbcType=TIMESTAMP}
+    where order_sn = #{orderSn,jdbcType=VARCHAR}
+  </update>
+  
+     <select id="getOrderByQuerySum" parameterType="com.gl365.order.model.OrderRefund"  resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from order_refund WHERE (order_status=${@com.gl365.order.enums.OrderStatusEnum@UNKNOWN_REFUND.getValue()} or order_status=${@com.gl365.order.enums.OrderStatusEnum@TIME_REFUND.getValue()})
+	AND query_sum &lt; #{querySum,jdbcType=INTEGER} 
+	AND query_time &lt; #{queryTime,jdbcType=TIMESTAMP} and channel is not NULL ORDER BY create_time DESC LIMIT 50
+  </select>
+ 
+</mapper>

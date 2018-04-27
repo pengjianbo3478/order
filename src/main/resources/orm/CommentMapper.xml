@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gl365.order.mapper.CommentMapper" >
+  <resultMap id="BaseResultMap" type="com.gl365.order.model.comment.Comment" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="merchant_no" property="merchantNo" jdbcType="VARCHAR" />
+    <result column="payment_no" property="paymentNo" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="grade" property="grade" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="del_flag" property="delFlag" jdbcType="BIT" />
+    <result column="total_amount" property="totalAmount" jdbcType="DECIMAL" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.gl365.order.model.comment.Comment" extends="BaseResultMap" >
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  
+  <resultMap id="ResultGradeLeave" type="com.gl365.order.model.comment.CommentGradeLeave"  >
+    <result column="good" property="good" jdbcType="INTEGER" />
+    <result column="bad" property="bad" jdbcType="INTEGER" />
+    <result column="medium" property="medium" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, user_id, merchant_no, payment_no, create_time, grade, status, del_flag, total_amount
+  </sql>
+  <sql id="Blob_Column_List" >
+    content
+  </sql>
+  
+  <select id="selectByUidMnoPno" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select   
+   		<include refid="Base_Column_List" />
+	from 
+	 	comment 
+	where 
+		merchant_no = #{merchantNo}
+	and
+		user_id = #{userId}
+	and 
+		payment_no = #{paymentNo}
+  </select>
+  
+  <select id="getCommentStatus" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select   
+   		<include refid="Base_Column_List" />
+	from 
+	 	comment 
+	where 
+	    del_flag = 0
+	and
+		merchant_no = #{merchantNo}
+	and
+		user_id = #{userId}
+	and 
+		payment_no = #{paymentNo}
+  </select>
+  
+  <select id="selectGradeLeaveByMerchantNo" resultMap="ResultGradeLeave" parameterType="java.util.Map">
+  	select 	merchant_no,
+    		sum(case when grade in 
+    				<foreach item="item" index="index" collection="good" open="(" separator="," close=")">
+	    				#{item}
+	   				</foreach>
+	   			then 1 else 0 end) as good,
+    		sum(case when grade in 
+    				<foreach item="item" index="index" collection="medium" open="(" separator="," close=")">
+	    				#{item}
+	   				</foreach>
+    		then 1 else 0 end ) as medium,
+			sum(case when grade in
+					<foreach item="item" index="index" collection="bad" open="(" separator="," close=")">
+	    				#{item}
+	   				</foreach>
+			then 1 else 0 end ) as bad
+	from 		comment
+	where 		del_flag = 0
+	and 		merchant_no = #{merchantNo}
+	group by 	merchant_no
+  </select>
+  
+  
+   <select id="selectByMerchantNo" resultMap="ResultMapWithBLOBs" parameterType="java.util.Map">
+    select	<include refid="Blob_Column_List" />,<include refid="Base_Column_List" />
+	from	comment 
+	where 	1=1
+	<if test="null != merchantNo">	and merchant_no = #{merchantNo}</if>
+	<if test="null != userId">		and user_id = #{userId}</if>
+	<if test="null != status">		and status = #{status}</if>
+	<if test="null != type">		and grade in
+		<foreach item="item" index="index" collection="type" open="(" separator="," close=")">
+	    	#{item}
+	   	</foreach>
+	</if>
+	and			del_flag = 0
+	order by 	create_time desc
+    limit 		#{begin}, #{end}
+  </select>
+  
+  <select id="selectCountByMerchantNo" resultType="java.lang.Integer" parameterType="java.util.Map">
+    select	count(0)
+	from	comment 
+	where 	1=1
+	<if test="null != merchantNo">	and merchant_no = #{merchantNo}</if>
+	<if test="null != userId">		and user_id = #{userId}</if>
+	<if test="null != status">		and status = #{status}</if>
+	<if test="null != type">		and grade in
+		<foreach item="item" index="index" collection="type" open="(" separator="," close=")">
+	    	#{item}
+	   	</foreach>
+	</if>
+	and			del_flag = 0
+  </select>
+  
+  <select id="selectByUserId" resultMap="ResultMapWithBLOBs" parameterType="java.util.Map">
+    select   
+   		<include refid="Blob_Column_List" />,<include refid="Base_Column_List" />
+	 from comment 
+	where del_flag = 0
+	and user_id = #{userId,jdbcType=VARCHAR}
+	and status = 1
+	order by 
+	  create_time desc
+    limit #{beginNum,jdbcType=INTEGER},#{endNum,jdbcType=INTEGER}
+  </select>
+  <select id="selectByUserIdCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+    select count(1)
+	 from comment t 
+	where user_id = #{userId,jdbcType=VARCHAR}
+	and status = 1
+	and del_flag = 0
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from comment
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from comment
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertSelective" parameterType="com.gl365.order.model.comment.Comment" >
+    insert into comment
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="merchantNo != null" >
+        merchant_no,
+      </if>
+      <if test="paymentNo != null" >
+        payment_no,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="grade != null" >
+        grade,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="totalAmount != null" >
+        total_amount,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantNo != null" >
+        #{merchantNo,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentNo != null" >
+        #{paymentNo,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="grade != null" >
+        #{grade,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=BIT},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="totalAmount != null" >
+        #{totalAmount,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.gl365.order.model.comment.Comment" >
+    update comment
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="merchantNo != null" >
+        merchant_no = #{merchantNo,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentNo != null" >
+        payment_no = #{paymentNo,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="grade != null" >
+        grade = #{grade,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=BIT},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="totalAmount != null" >
+        total_amount = #{totalAmount,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="updateWithUidMnoPno" parameterType="com.gl365.order.model.comment.Comment" >
+    update comment
+    <set >
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="grade != null" >
+        grade = #{grade,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=BIT},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="totalAmount != null" >
+        total_amount = #{totalAmount,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where 
+    	merchant_no = #{merchantNo}
+    and 
+    	user_id = #{userId}
+    and 
+    	payment_no = #{paymentNo}
+  </update>
+  
+	<select id="selectCommentByUidMnoPno" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List" />
+		from 	comment
+		where 	del_flag = 0
+		and 	merchant_no = #{merchantNo}
+		and		user_id = #{userId}
+		and		payment_no = #{paymentNo}
+	</select>
+</mapper>
